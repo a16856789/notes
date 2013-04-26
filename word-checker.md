@@ -24,30 +24,34 @@
 
 rule.xml中的Part的定义：
 
-	<part name="论文">
-		<part name="中文摘要">
-			<part name="标题" start="nonempty-paragraph" end="end-of-paragraph">
-				<validator ref="摘要标题字体" />
-			</part>
-			<part name="副标题" start="start-with:——" end="end-of-paragraph" greedy="false">
-			</part>
-			<part name="正文" start="start-with:【摘要】" end="end-of-paragraph">
-			</part>
-			<part name="正文" start="nonempty-paragraph" end="end-of-paragraph" multi="true" greedy="false">
-			</part>
-			<part name="关键词" start="start-with:【关键词】" end="end-of-paragraph">
-			</part>
+```xml
+<part name="论文">
+	<part name="中文摘要">
+		<part name="标题" start="nonempty-paragraph" end="end-of-paragraph">
+			<validator ref="摘要标题字体" />
+		</part>
+		<part name="副标题" start="start-with:——" end="end-of-paragraph" greedy="false">
+		</part>
+		<part name="正文" start="start-with:【摘要】" end="end-of-paragraph">
+		</part>
+		<part name="正文" start="nonempty-paragraph" end="end-of-paragraph" multi="true" greedy="false">
+		</part>
+		<part name="关键词" start="start-with:【关键词】" end="end-of-paragraph">
 		</part>
 	</part>
+</part>
+```
 
 rule.xml中的"摘要标题字体"Validator的定义：
 
+```xml
 	<validator id="摘要标题字体" class="isummer.checker.validator.FontValidator">
 		<property name="nameAscii" value="Times New Roman" />
 		<property name="nameFarEast" value="宋体" />
 		<property name="size" value="二号" />
 		<property name="bold" value="true" />
 	</validator>
+```
 
 该rule.xml对一份文档的切分实例：
 
@@ -55,6 +59,7 @@ rule.xml中的"摘要标题字体"Validator的定义：
 
 首先，XmlRuleParser的parse方法读入rule.xml文件，然后根据其中的Part的定义生成PartDefinition树，返回该树的树根(即”论文“Part)。生成的过程中，系统会根据validator的定义在相应的Part创建Validator实例。Validator创建的相关代码：
 
+```java
 	// 创建对象
 	Class<?> clazz = Class.forName(clazzName);
 	Validator validator = (Validator) clazz.newInstance();
@@ -66,11 +71,13 @@ rule.xml中的"摘要标题字体"Validator的定义：
 	
 		BeanUtil.setDeclaredPropertyForced(validator, name, value);
 	}
+```
 
 首先，根据validator标签中的class属性new一个validator类的实例，然后就根据property中定义的属性设置validator对应的javabean的属性。
 
 在有了PartDefinition树之后，将其传递给MsWordChecker的checker方法，该方法根据Part的定义，将Word文档分成若干个Part，然后再利用Validator校验相应的Part，其中检测的代码：
 
+```java
 	boolean dfsForValidate(List<ValidatorError> errorList, Document document, Part rootPart) {
 		// 前序遍历的校验器
 		for (Validator v : rootPart.getDefinition().getPreorderValidators()) {
@@ -89,6 +96,7 @@ rule.xml中的"摘要标题字体"Validator的定义：
 			v.validate(document, errorList, rootPart);
 		}
 	}
+```
 
 ### 总结
 
@@ -107,7 +115,4 @@ rule.xml中的"摘要标题字体"Validator的定义：
 
 必须有一个无参构造器。
 
-```java
-public void main() {
-}
-```
+
