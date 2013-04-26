@@ -107,4 +107,7 @@ rule.xml中的"摘要标题字体"Validator的定义：
 
 必须有一个无参构造器。
 
-
+```java
+public void main() {
+}
+```
