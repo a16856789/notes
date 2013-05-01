@@ -1,4 +1,3 @@
-
 # 试卷解析详解
 
 * v0.1 by summer - 2013-05-01
@@ -68,7 +67,7 @@ protected String currentPropertyName = null;
 例如，上面的word文档的解析的过程为：
 
 1. 首先，所有currentXXX都设置为null，表示当前还没有扫描到任何的题目；
-2. 判断第2段`一、选择题`是大题的开始，然后设置`currentBigQuestion = '一、选择题'`，设置`currentObject = '一、选择题'`；
+2. 判断第1段`一、选择题`是大题的开始，然后设置`currentBigQuestion = '一、选择题'`，设置`currentObject = '一、选择题'`；
 3. 判断第2段，识别出`1. 选择题描述1`是题目的开始，那么设置`currentQuestion = '1选择题1'`，同样设置`currentObject`，根据当前的`currentBigQuestion`，我们能够轻易知道当前所在的大题为`一、选择题`；
 4. 判断第3段，发现`A.1 B.2`既不是大题的开始(大题的开始形式为`一、`)，也不是题目的开始，于是根据`currentObject == '1选择题1'`知道该段为选择题1的内容(具体ABCD选项最后再解析)；
 5. 判断第4段`【详解】选择题详解`为属性，根据当前的`currentQuestion == '1选择题1'`，知道这是选择题1的详解；
